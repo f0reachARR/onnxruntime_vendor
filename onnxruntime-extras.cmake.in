@@ -1,0 +1,8 @@
+add_library(onnxruntime::onnxruntime SHARED IMPORTED)
+
+set_target_properties(onnxruntime::onnxruntime PROPERTIES
+    IMPORTED_LOCATION "@CMAKE_INSTALL_PREFIX@/lib/libonnxruntime.so.@ONNXRUNTIME_VERSION@"
+    INTERFACE_INCLUDE_DIRECTORIES "@CMAKE_INSTALL_PREFIX@/include"
+)
+
+list(APPEND onnxruntime_vendor_TARGETS onnxruntime::onnxruntime)

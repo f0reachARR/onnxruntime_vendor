@@ -35,7 +35,7 @@ if(EXISTS "/usr/local/cuda")
     list(APPEND ONNXRUNTIME_BUILD_OPTIONS "--use_cuda"
         "--cuda_home" "/usr/local/cuda"
         "--cudnn_home" "/usr/local/cuda"
-        "--cmake_extra_defines" "CMAKE_CUDA_ARCHITECTURES=75;86;89;90;120")
+        "--cmake_extra_defines" "CMAKE_CUDA_ARCHITECTURES=\"75;86;89;90;120\"")
 endif()
 
 # If /usr/src/tensorrt exists, enable TensorRT by default

@@ -1,0 +1,64 @@
+name: Build debian packages
+
+on:
+  push:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - container: nvcr.io/nvidia/cuda:13.0.2-cudnn-devel-ubuntu24.04
+            runner: ubuntu-24.04-arm
+            extra_args: "--parallel --use_cuda --use_rknpu"
+            rosdistro: jazzy
+          - container: nvcr.io/nvidia/cuda:13.0.2-cudnn-devel-ubuntu24.04
+            runner: ubuntu-24.04
+            extra_args: "--parallel --use_cuda --use_rocm"
+            rosdistro: jazzy
+    steps:
+      - name: Create workspace
+        run: |
+          mkdir src
+
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          path: "./src/onnxruntime_vendor"
+
+      - name: Cache apt and rosdep
+        id: cache-apt-rosdep
+        uses: actions/cache@v4
+        with:
+          path: |
+            /var/cache/apt/archives
+            /var/lib/apt/lists
+            /etc/ros/rosdep
+          key: ${{ runner.os }}-ros-${{ matrix.rosdistro }}-apt
+          restore-keys: |
+            ${{ runner.os }}-ros-${{ matrix.rosdistro }}-apt-
+
+      - name: Setup ROS environment
+        uses: ros-tooling/setup-ros@v0.7
+        with:
+          required-ros-distributions: ${{ matrix.rosdistro }}
+
+      - name: Run rosdep
+        run: |
+          rosdep update --include-eol-distros
+          rosdep install -iy --from-paths src --rosdistro ${{ matrix.rosdistro }}
+
+          sudo apt install fakeroot python3-bloom debhelper dh-python
+
+      - name: Build
+        run: |
+          cd ./src/onnxruntime_vendor
+          bloom-generate rosdebian .
+          sed -i "s%dh_shlibdeps%dh_shlibdeps --dpkg-shlibdeps-params=--ignore-missing-info%" debian/rules
+          fakeroot debian/rules binary
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ runner.os }}
+          path: ./src/*.deb

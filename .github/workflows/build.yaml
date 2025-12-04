@@ -52,7 +52,8 @@ jobs:
       - name: Build
         run: |
           cd ./src/onnxruntime_vendor
-          env ROSDISTRO=${{ matrix.rosdistro }} bloom-generate rosdebian .
+          source /opt/ros/${{ matrix.rosdistro }}/setup.bash
+          bloom-generate rosdebian .
           sed -i "s%dh_shlibdeps%dh_shlibdeps --dpkg-shlibdeps-params=--ignore-missing-info%" debian/rules
           fakeroot debian/rules binary
 

@@ -6,16 +6,15 @@ on:
 jobs:
   build:
     runs-on: ${{ matrix.runner }}
+    container: ${{ matrix.container }}
     strategy:
       matrix:
         include:
           - container: nvcr.io/nvidia/cuda:13.0.2-cudnn-devel-ubuntu24.04
             runner: ubuntu-24.04-arm
-            extra_args: "--parallel --use_cuda --use_rknpu"
             rosdistro: jazzy
           - container: nvcr.io/nvidia/cuda:13.0.2-cudnn-devel-ubuntu24.04
             runner: ubuntu-24.04
-            extra_args: "--parallel --use_cuda --use_rocm"
             rosdistro: jazzy
     steps:
       - name: Create workspace

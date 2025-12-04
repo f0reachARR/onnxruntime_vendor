@@ -24,28 +24,23 @@ set(ONNXRUNTIME_BUILD_OPTIONS
     "--compile_no_warning_as_error"
     "--skip_pip_install"
     "--skip_tests"
+    "--allow_running_as_root"
     ${ONNXRUNTIME_EXTRA_OPTS}
 )
 
-option(ONNXRUNTIME_USE_CUDA "Build ONNX Runtime with CUDA support" OFF)
-option(ONNXRUNTIME_USE_TENSORRT "Build ONNX Runtime with TensorRT support" OFF)
-option(ONNXRUNTIME_USE_ROCM "Build ONNX Runtime with ROCm support" OFF)
-option(ONNXRUNTIME_USE_RKNPU "Build ONNX Runtime with RK NPU support" OFF)
-
-if(ONNXRUNTIME_USE_CUDA STREQUAL "ON")
-    list(APPEND ONNXRUNTIME_BUILD_OPTIONS "--use_cuda")
+# If /usr/local/cuda exists, enable CUDA by default
+if(EXISTS "/usr/local/cuda")
+    list(APPEND ONNXRUNTIME_BUILD_OPTIONS "--use_cuda" "--cuda_home" "/usr/local/cuda")
 endif()
 
-if(ONNXRUNTIME_USE_TENSORRT STREQUAL "ON")
-    list(APPEND ONNXRUNTIME_BUILD_OPTIONS "--use_tensorrt")
+# If /usr/src/tensorrt exists, enable TensorRT by default
+if(EXISTS "/usr/src/tensorrt")
+    list(APPEND ONNXRUNTIME_BUILD_OPTIONS "--use_tensorrt" "--tensorrt_home" "/usr/src/tensorrt")
 endif()
 
-if(ONNXRUNTIME_USE_ROCM STREQUAL "ON")
-    list(APPEND ONNXRUNTIME_BUILD_OPTIONS "--use_rocm")
-endif()
-
-if(ONNXRUNTIME_USE_RKNPU STREQUAL "ON")
-    list(APPEND ONNXRUNTIME_BUILD_OPTIONS "--use_rknpu")
+# If /opt/rocm/lib/migraphx exists, enable MIGraphX by default
+if(EXISTS "/opt/rocm")
+    list(APPEND ONNXRUNTIME_BUILD_OPTIONS "--use_migraphx" "--migraphx_home" "/opt/rocm")
 endif()
 
 ExternalProject_Add(

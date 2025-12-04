@@ -46,7 +46,7 @@ jobs:
           rosdep update --include-eol-distros
           rosdep install -iy --from-paths src --rosdistro ${{ matrix.rosdistro }}
 
-          sudo apt install fakeroot python3-bloom debhelper dh-python
+          sudo apt-get install -y fakeroot python3-bloom debhelper dh-python
 
       - name: Build
         run: |

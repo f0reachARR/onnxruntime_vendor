@@ -35,14 +35,12 @@ jobs:
             /var/cache/apt/archives
             /var/lib/apt/lists
             /etc/ros/rosdep
-          key: ${{ runner.os }}-ros-${{ matrix.rosdistro }}-apt
-          restore-keys: |
-            ${{ runner.os }}-ros-${{ matrix.rosdistro }}-apt-
+          key: ${{ runner.os }}-apt
 
       - name: Setup ROS environment
         uses: ros-tooling/setup-ros@v0.7
         with:
-          required-ros-distributions: ${{ matrix.rosdistro }}
+          required-ros-distributions: ""
 
       - name: Run rosdep
         run: |

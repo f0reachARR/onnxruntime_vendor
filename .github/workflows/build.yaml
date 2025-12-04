@@ -53,6 +53,8 @@ jobs:
         run: |
           cd ./src/onnxruntime_vendor
           source /opt/ros/${{ matrix.rosdistro }}/setup.bash
+          export DEB_BUILD_OPTIONS="parallel=$(nproc) nocheck"
+          rosdep update
           bloom-generate rosdebian .
           sed -i "s%dh_shlibdeps%dh_shlibdeps --dpkg-shlibdeps-params=--ignore-missing-info%" debian/rules
           fakeroot debian/rules binary

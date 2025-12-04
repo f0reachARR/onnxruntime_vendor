@@ -8,7 +8,7 @@
   <license>MIT</license>
 
   <build_depend>libgmock-dev</build_depend>
-  <build_depend>libgtest-dev</build_depend>
+  <build_depend>gtest</build_depend>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
   <buildtool_depend>ament_cmake_auto</buildtool_depend>

@@ -56,5 +56,14 @@ ExternalProject_Add(
     GIT_SHALLOW TRUE
     CONFIGURE_COMMAND <SOURCE_DIR>/build.sh ${ONNXRUNTIME_BUILD_OPTIONS} --update
     BUILD_COMMAND <SOURCE_DIR>/build.sh ${ONNXRUNTIME_BUILD_OPTIONS} --build
-    INSTALL_COMMAND cmake --install "<BINARY_DIR>/${ONNXRUNTIME_BUILD_TYPE}" --prefix <INSTALL_DIR>
+    INSTALL_COMMAND cmake --install "<SOURCE_DIR>/build/Linux/${ONNXRUNTIME_BUILD_TYPE}" --prefix ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}_install/
 )
+
+install(
+    DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}_install/
+    DESTINATION ${CMAKE_INSTALL_PREFIX}
+)
+
+ament_export_include_directories(include/onnxruntime)
+ament_export_libraries(onnxruntime)
+ament_package()

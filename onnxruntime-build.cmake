@@ -25,12 +25,17 @@ set(ONNXRUNTIME_BUILD_OPTIONS
     "--skip_pip_install"
     "--skip_tests"
     "--allow_running_as_root"
+    "--cmake_extra_defines"
+    "onnxruntime_BUILD_UNIT_TESTS=OFF"
     ${ONNXRUNTIME_EXTRA_OPTS}
 )
 
 # If /usr/local/cuda exists, enable CUDA by default
 if(EXISTS "/usr/local/cuda")
-    list(APPEND ONNXRUNTIME_BUILD_OPTIONS "--use_cuda" "--cuda_home" "/usr/local/cuda" "--cudnn_home" "/usr/local/cuda")
+    list(APPEND ONNXRUNTIME_BUILD_OPTIONS "--use_cuda"
+        "--cuda_home" "/usr/local/cuda"
+        "--cudnn_home" "/usr/local/cuda"
+        "--cmake_extra_defines" "CMAKE_CUDA_ARCHITECTURES=75;86;89;90;120")
 endif()
 
 # If /usr/src/tensorrt exists, enable TensorRT by default

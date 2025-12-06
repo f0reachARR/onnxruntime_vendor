@@ -34,8 +34,7 @@ set(ONNXRUNTIME_BUILD_OPTIONS
 if(EXISTS "/usr/local/cuda")
     list(APPEND ONNXRUNTIME_BUILD_OPTIONS "--use_cuda"
         "--cuda_home" "/usr/local/cuda"
-        "--cudnn_home" "/usr/local/cuda"
-        "--cmake_extra_defines" "CMAKE_CUDA_ARCHITECTURES=\"75;86;89;90;120\"")
+        "--cudnn_home" "/usr/local/cuda")
 endif()
 
 # If /usr/src/tensorrt exists, enable TensorRT by default
@@ -47,6 +46,8 @@ endif()
 if(EXISTS "/opt/rocm")
     list(APPEND ONNXRUNTIME_BUILD_OPTIONS "--use_migraphx" "--migraphx_home" "/opt/rocm")
 endif()
+
+message(STATUS "ONNX Runtime build options: ${ONNXRUNTIME_BUILD_OPTIONS}")
 
 ExternalProject_Add(
     onnxruntime_external

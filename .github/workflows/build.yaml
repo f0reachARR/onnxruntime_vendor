@@ -19,6 +19,9 @@ jobs:
     steps:
       - name: Create workspace
         run: |
+          du -h /__t
+          rm -rf /__t/*
+
           mkdir src
 
       - name: Checkout

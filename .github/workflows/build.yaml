@@ -10,10 +10,10 @@ jobs:
     strategy:
       matrix:
         include:
-          - container: nvcr.io/nvidia/cuda:13.0.2-cudnn-devel-ubuntu24.04
+          - container: nvcr.io/nvidia/cuda:12.6.0-cudnn-devel-ubuntu24.04
             runner: ubuntu-24.04-arm
             rosdistro: jazzy
-          - container: nvcr.io/nvidia/cuda:13.0.2-cudnn-devel-ubuntu24.04
+          - container: nvcr.io/nvidia/cuda:12.6.0-cudnn-devel-ubuntu24.04
             runner: ubuntu-24.04
             rosdistro: jazzy
     steps:

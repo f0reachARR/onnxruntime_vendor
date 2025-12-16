@@ -6,22 +6,17 @@ on:
 jobs:
   build:
     runs-on: ${{ matrix.runner }}
-    container: ${{ matrix.container }}
+    # container: ${{ matrix.container }}
     strategy:
       matrix:
         include:
-          - container: nvcr.io/nvidia/cuda:12.6.0-cudnn-devel-ubuntu24.04
-            runner: ubuntu-24.04-arm
+          - runner: ubuntu-24.04-arm
             rosdistro: jazzy
-          - container: nvcr.io/nvidia/cuda:12.6.0-cudnn-devel-ubuntu24.04
-            runner: ubuntu-24.04
+          - runner: ubuntu-24.04
             rosdistro: jazzy
     steps:
       - name: Create workspace
         run: |
-          du -h /__t
-          rm -rf /__t/*
-
           mkdir src
 
       - name: Checkout
@@ -38,6 +33,14 @@ jobs:
             /var/lib/apt/lists
             /etc/ros/rosdep
           key: ${{ runner.os }}-apt
+
+      - name: Free Disk Space (Ubuntu)
+        uses: jlumbroso/free-disk-space@main
+
+      - uses: Jimver/cuda-toolkit@v0.2.29
+        id: cuda-toolkit
+        with:
+          cuda: "12.6.0"
 
       - name: Setup ROS environment
         uses: ros-tooling/setup-ros@v0.7

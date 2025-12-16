@@ -64,6 +64,13 @@ jobs:
 
           sudo apt-get install -y fakeroot python3-bloom debhelper dh-python
 
+          sudo rm -f cuda-keyring_1.1-1_all.deb
+          sudo rm -rf /var/lib/apt/lists/*
+          sudo rm -rf /var/cache/apt/archives/*.deb
+
+      - name: Show disk usage
+        run: df -h
+
       - name: Build
         run: |
           cd ./src/onnxruntime_vendor

@@ -37,16 +37,20 @@ jobs:
       - name: Free Disk Space (Ubuntu)
         uses: jlumbroso/free-disk-space@main
 
-      - uses: Jimver/cuda-toolkit@v0.2.29
-        id: cuda-toolkit
-        with:
-          cuda: "12.6.0"
-          method: "network"
-
       - name: Install TensorRT + cuDNN
         run: |
+          if [ "$(uname -m)" = "x86_64" ]; then
+            architecture="amd64"
+          else
+            architecture="sbsa"
+          fi
+          echo "Architecture: $architecture"
+
+          wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/${architecture}/cuda-keyring_1.1-1_all.deb
+          sudo dpkg -i cuda-keyring_1.1-1_all.deb
+
           sudo apt-get update
-          sudo apt-get install -y libnvinfer-dev libnvinfer-plugin-dev libcudnn9-dev-cuda-12
+          sudo apt-get install -y libnvinfer-dev libnvinfer-plugin-dev libcudnn9-dev-cuda-12 cuda-toolkit-12-6
 
       - name: Setup ROS environment
         uses: ros-tooling/setup-ros@v0.7

@@ -40,7 +40,7 @@ jobs:
       - name: Install TensorRT + cuDNN
         run: |
           if [ "$(uname -m)" = "x86_64" ]; then
-            architecture="amd64"
+            architecture="x86_64"
           else
             architecture="sbsa"
           fi

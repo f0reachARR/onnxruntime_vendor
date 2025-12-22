@@ -12,6 +12,10 @@ if(NOT DEFINED ONNXRUNTIME_EXTRA_OPTS)
     set(ONNXRUNTIME_EXTRA_OPTS "")
 endif()
 
+if(DEFINED ENV{ONNXRUNTIME_EXTRA_OPTS})
+    set(ONNXRUNTIME_EXTRA_OPTS "$ENV{ONNXRUNTIME_EXTRA_OPTS} ${ONNXRUNTIME_EXTRA_OPTS}")
+endif()
+
 string(REPLACE " " ";" ONNXRUNTIME_EXTRA_OPTS "${ONNXRUNTIME_EXTRA_OPTS}")
 
 if(NOT DEFINED ONNXRUNTIME_BUILD_TYPE)
@@ -37,9 +41,13 @@ if(EXISTS "/usr/local/cuda")
         "--cudnn_home" "/usr/local/cuda")
 endif()
 
-# If /usr/src/tensorrt exists, enable TensorRT by default
-if(EXISTS "/usr/src/tensorrt")
-    list(APPEND ONNXRUNTIME_BUILD_OPTIONS "--use_tensorrt" "--tensorrt_home" "/usr/src/tensorrt")
+# If "NvInfer.h" can be included, enable TensorRT by default
+find_path(TENSORRT_INCLUDE_DIR NvInfer.h HINTS /usr/include /usr/local/include)
+
+message(STATUS "TensorRT include dir: ${TENSORRT_INCLUDE_DIR}")
+
+if(TENSORRT_INCLUDE_DIR)
+    list(APPEND ONNXRUNTIME_BUILD_OPTIONS "--use_tensorrt" "--tensorrt_home" "/usr")
 endif()
 
 # If /opt/rocm/lib/migraphx exists, enable MIGraphX by default
